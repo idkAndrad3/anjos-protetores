@@ -9,12 +9,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx';
 import Login from './routes/Login/Login.jsx';
 import Cadastro from './routes/Cadastro/Cadastro.jsx';
+import Inicio from './routes/Inicio/Inicio.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {path: "/", element: <Inicio />},
       { path: "login", element: <Login /> },
       { path: "cadastro", element: <Cadastro /> },
     ]

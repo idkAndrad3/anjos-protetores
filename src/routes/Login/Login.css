@@ -92,3 +92,28 @@
     color: #5a3d2b;
 }
 
+.back-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #5a3d2b; /* marrom médio */
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+    
+}
+
+.logo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+

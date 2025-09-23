@@ -1,6 +1,8 @@
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useState } from 'react';
+import { TiArrowBackOutline } from "react-icons/ti";
 import './Login.css';
+import logo from '../../assets/logo.png';
 
 const Login = () => {
 
@@ -16,6 +18,10 @@ const Login = () => {
   return (
       <div className="container">
         <form onSubmit={handleSubmit}>
+            <a href="/"><TiArrowBackOutline className='back-icon'/></a>
+            <div className="logo">
+                <img src={logo} alt="Logo" />
+            </div>
             <h1>Anjos Protetores de Animais - Login</h1>
             <div className='input-field'>
             <input type="email" placeholder="E-mail" 
