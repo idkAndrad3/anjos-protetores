@@ -10,6 +10,9 @@ import App from './App.jsx';
 import Login from './routes/Login/Login.jsx';
 import Cadastro from './routes/Cadastro/Cadastro.jsx';
 import Inicio from './routes/Inicio/Inicio.jsx';
+import Perfil from './routes/Perfil/Perfil.jsx';
+import EditarPerfil from './routes/Perfil/EditarPerfil.jsx';
+import PrivateRoute from './routes/PrivateRoute.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +22,8 @@ const router = createBrowserRouter([
       {path: "/", element: <Inicio />},
       { path: "login", element: <Login /> },
       { path: "cadastro", element: <Cadastro /> },
+      { path: "perfil", element: (<PrivateRoute> <Perfil /> </PrivateRoute>) },
+      {path: "perfil/editar", element: (<PrivateRoute> <EditarPerfil /> </PrivateRoute>) },
     ]
   }
 ]);

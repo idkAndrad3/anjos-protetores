@@ -11,28 +11,37 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (event) => { 
-        event.preventDefault();
+    event.preventDefault();
 
-        try {
-            
-            const loginPayload = {
-                email: email,
-                password: password,
-            };
+    try {
+        const loginPayload = {
+        email: email,
+        password: password,
+        };
 
-            
-            const response = await axios.post('http://localhost:8080/api/auth/login', loginPayload);
+        // Envia login
+        const response = await axios.post('http://localhost:8080/api/auth/login', loginPayload);
 
-           
-            alert('Login realizado com sucesso!');
-            console.log('Token de acesso:', response.data.token);
-            
-
-        } catch (error) {
-            
-            alert('Falha no login. Verifique seu e-mail e senha.');
-            console.error('Ocorreu um erro no login:', error);
+        // Pega o token retornado pela API
+        const token = response?.data?.token;
+        if (!token) {
+        alert("Falha no login: token não recebido.");
+        return;
         }
+
+        // Salva o token localmente
+        localStorage.setItem("token", token);
+
+        alert('Login realizado com sucesso!');
+        console.log('Token de acesso:', token);
+
+        // Redireciona o usuário para a página de perfil
+        window.location.href = "/perfil";
+
+    } catch (error) {
+        alert('Falha no login. Verifique seu e-mail e senha.');
+        console.error('Ocorreu um erro no login:', error);
+    }
     };
 
     return (
