@@ -20,7 +20,7 @@ const Login = () => {
         };
 
         // Envia login
-        const response = await axios.post('http://localhost:8080/api/auth/login', loginPayload);
+        const response = await axios.post('http://localhost:8080/api/pvt/auth/login', loginPayload);
 
         // Pega o token retornado pela API
         const token = response?.data?.token;

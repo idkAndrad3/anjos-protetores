@@ -26,7 +26,7 @@ const Adocao = () => {
                 setLoading(true);
                 setError(null);
 
-                const response = await axios.get('http://localhost:8080/api/animals', {
+                const response = await axios.get('http://localhost:8080/api/pub/animals', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
