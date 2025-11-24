@@ -4,6 +4,7 @@ import { isAdmin } from '../../services/auth';
 import SpeciesManager from './SpeciesManager';
 import RacesManager from './RacesManager';
 import AnimalsManager from './AnimalsManager';
+import AdoptionsManager from './AdoptionsManager';
 import './Admin.css';
 
 const Admin = () => {
@@ -28,7 +29,7 @@ const Admin = () => {
             case 'racas':
                return <RacesManager />;
             case 'adocoes':
-                return <div><h2>Pedidos de Adoção</h2><p>Aqui o admin aprova as adoções.</p></div>;
+                return <AdoptionsManager />;
             default:
                 return <div>Selecione uma opção</div>;
         }
@@ -40,8 +41,14 @@ const Admin = () => {
     return (
         <div className="admin-container">
             <div className="admin-header">
+            <div>
                 <h1>Painel Administrativo</h1>
                 <p>Bem-vindo, Administrador.</p>
+            </div>
+
+            <button className="admin-back-button" onClick={() => navigate('/')}>
+                ← Voltar
+            </button>
             </div>
 
             {/* Menu de Abas */}
