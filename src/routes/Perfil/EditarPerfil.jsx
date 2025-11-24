@@ -13,7 +13,7 @@ export default function EditarPerfil() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api.get("/api/adopters/profile");
+        const { data } = await api.get("/api/pvt/users");
         setId(data.id);
         setForm({
           name: data.name ?? "",
@@ -63,7 +63,7 @@ export default function EditarPerfil() {
           E-mail
           <input type="email" name="email" value={form.email} onChange={onChange} required />
         </label>
-                <label>
+        <label>
           Senha
           <input type="password" name="password" value={form.password} onChange={onChange} required />
         </label>

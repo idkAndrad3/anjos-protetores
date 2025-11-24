@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Inicio.css';
 import Navbar from '../Navbar/Navbar';
+import { BiAlignLeft } from 'react-icons/bi';
+import Footer from '../Footer/Footer';
 
 const Inicio = () => {
     const [dogs, setDogs] = useState([]);
@@ -42,6 +44,14 @@ const Inicio = () => {
                     breed: "Poodle",
                     size: "Pequeno",
                     image: "https://images.unsplash.com/photo-1517423568366-8b83523034fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    id: 5,
+                    name: "Pastel",
+                    age: "5 anos",
+                    breed: "Poodle",
+                    size: "Pequeno",
+                    image: "https://images.unsplash.com/photo-1517423568366-8b83523034fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
                 }
             ];
             setDogs(mockDogs);
@@ -77,19 +87,50 @@ const Inicio = () => {
     };
 
     const handleAdoptClick = () => {
-        window.location.href = '/adocao';
+        window.location.href = '/animal/1';
+    };
+
+    const getItemsPerPage = () => {
+        if (window.innerWidth < 600) return 1;
+        if (window.innerWidth < 992) return 2;
+        return 4;
     };
 
     const nextSlide = () => {
-        setCurrentSlide(currentSlide === dogs.length - 1 ? 0 : currentSlide + 1);
+        const itemsPerPage = getItemsPerPage();
+        // O limite é o total menos o que já está visível
+        const maxIndex = Math.max(0, dogs.length - itemsPerPage);
+
+        setCurrentSlide((prev) => {
+            if (prev >= maxIndex) return 0; // Volta ao início
+            return prev + 1;
+        });
     };
 
     const prevSlide = () => {
-        setCurrentSlide(currentSlide === 0 ? dogs.length - 1 : currentSlide - 1);
+        const itemsPerPage = getItemsPerPage();
+        const maxIndex = Math.max(0, dogs.length - itemsPerPage);
+
+        setCurrentSlide((prev) => {
+            if (prev <= 0) return maxIndex;
+            return prev - 1;
+        });
     };
 
+    // Timer do Carrossel
+    useEffect(() => {
+        const interval = setInterval(() => {
+            nextSlide();
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [dogs.length]); 
+
     const goToSlide = (index) => {
-        setCurrentSlide(index);
+        const itemsPerPage = getItemsPerPage();
+        const maxIndex = Math.max(0, dogs.length - itemsPerPage);
+        if (index <= maxIndex) {
+            setCurrentSlide(index);
+        }
     };
 
     return (
@@ -98,27 +139,32 @@ const Inicio = () => {
             < Navbar />
             {/* Hero Section */}
             <section id="home" className="hero-section">
-                <div className="hero-content">
-                    <h1>Dê um lar para um amigo de quatro patas</h1>
-                    <p>Encontre seu novo melhor amigo no Anjos Protetores. Centenas de cães esperam por uma segunda chance.</p>
-                    <div className="hero-buttons">
-                        <button className="primary-btn" onClick={handleAdoptClick}>Ver Cães para Adoção</button>
-                        <button className="secondary-btn">Como Funciona</button>
+                <div className='default-container'>
+                    <div className="hero-content">
+                        <h1>Dê um lar para um amigo de quatro patas</h1>
+                        <p>Encontre seu novo melhor amigo no Anjos Protetores. Centenas de cães esperam por uma segunda chance.</p>
+                        <div className="hero-buttons">
+                            <button className="primary-btn" onClick={handleAdoptClick}>Ver Cães para Adoção</button>
+                            <button className="secondary-btn">Como Funciona</button>
+                        </div>
                     </div>
-                </div>
-                <div className="hero-image">
-                    <img src="https://images.unsplash.com/photo-1514984879728-be0aff75a6e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Cachorro feliz" />
                 </div>
             </section>
 
             {/* About Section */}
             <section id="about" className="about-section">
-                <div className="container">
-                    <h2>Sobre o Anjos Protetores</h2>
+                <div className="default-container">
                     <div className="about-content">
+
+                        <div className="about-image">
+                            <img src="../../src/assets/gato-home.png" alt="Sobre nós" />
+                        </div>
                         <div className="about-text">
-                            <p>O Anjos Protetores é uma organização sem fins lucrativos dedicada a resgatar, reabilitar e encontrar lares amorosos para cães abandonados e maltratados.</p>
-                            <p>Desde nossa fundação, já ajudamos mais de 1.000 cães a encontrarem famílias amorosas. Nossa missão é garantir que cada animal tenha a chance de viver uma vida feliz e saudável.</p>
+                            <div className='about-text-content'>
+                                <h2>Sobre o Anjos Protetores</h2>
+                                <p>O Anjos Protetores é uma organização sem fins lucrativos dedicada a resgatar, reabilitar e encontrar lares amorosos para cães abandonados e maltratados.</p>
+                                <p>Desde nossa fundação, já ajudamos mais de 1.000 cães a encontrarem famílias amorosas. Nossa missão é garantir que cada animal tenha a chance de viver uma vida feliz e saudável.</p>
+                            </div>
                             <div className="stats">
                                 <div className="stat">
                                     <h3>1.000+</h3>
@@ -134,20 +180,18 @@ const Inicio = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="about-image">
-                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Sobre nós" />
-                        </div>
+
                     </div>
                 </div>
             </section>
 
             {/* Dogs Section */}
             <section id="dogs" className="dogs-section">
-                <div className="container">
-                    <h2>Cães Disponíveis para Adoção</h2>
-                    <p className="section-subtitle">Conheça alguns dos nossos anjinhos que estão procurando um lar</p>
+                <div className="default-container">
 
                     <div className="dogs-carousel">
+                        <h2>Cães Disponíveis para Adoção</h2>
+                        <p className="section-subtitle">Conheça alguns dos nossos anjinhos que estão procurando um lar</p>
                         <button className="carousel-btn prev" onClick={prevSlide}>‹</button>
                         <button className="carousel-btn next" onClick={nextSlide}>›</button>
 
@@ -177,7 +221,7 @@ const Inicio = () => {
                         </div>
 
                         <div className="carousel-indicators">
-                            {dogs.map((_, index) => (
+                            {Array.from({ length: Math.max(1, dogs.length - getItemsPerPage() + 1) }).map((_, index) => (
                                 <button
                                     key={index}
                                     className={`indicator ${index === currentSlide ? 'active' : ''}`}
@@ -185,19 +229,21 @@ const Inicio = () => {
                                 ></button>
                             ))}
                         </div>
-                    </div>
 
-                    <div className="view-all-dogs">
-                        <button className="view-all-btn" onClick={handleAdoptClick}>Ver Todos os Cães</button>
+                        <div className="view-all-dogs">
+                            <button className="view-all-btn" onClick={handleAdoptClick}>Ver Todos os Cães</button>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Process Section */}
             <section id="process" className="process-section">
-                <div className="container">
-                    <h2>Como Adotar um Cão</h2>
-                    <p className="section-subtitle">O processo de adoção é simples e seguro</p>
+                <div className="process-container">
+                    <div>
+                        <h2>Como Adotar um Cão</h2>
+                        <p className="section-subtitle">O processo de adoção é simples e seguro</p>
+                    </div>
 
                     <div className="process-steps">
                         <div className="step">
@@ -226,10 +272,11 @@ const Inicio = () => {
 
             {/* Testimonials Section */}
             <section className="testimonials-section">
-                <div className="container">
-                    <h2>Histórias de Sucesso</h2>
-                    <p className="section-subtitle">Veja o que as famílias adotantes têm a dizer</p>
-
+                <div className="container-testimonials">
+                    <div className='testimonials-text'>
+                        <h2 className='font-title'>Histórias de Sucesso</h2>
+                        <p>Veja o que as famílias adotantes têm a dizer</p>
+                    </div>
                     <div className="testimonials">
                         <div className="testimonial">
                             <div className="testimonial-content">
@@ -256,7 +303,7 @@ const Inicio = () => {
 
             {/* CTA Section */}
             <section className="cta-section">
-                <div className="container">
+                <div className="default-container">
                     <div className="cta-content">
                         <h2>Pronto para mudar uma vida?</h2>
                         <p>Adote um cão e ganhe um amigo leal para sempre</p>
@@ -269,44 +316,7 @@ const Inicio = () => {
             </section>
 
             {/* Footer */}
-            <footer id="contact" className="footer">
-                <div className="container">
-                    <div className="footer-content">
-                        <div className="footer-section">
-                            <h3>Anjos Protetores</h3>
-                            <p>Dando uma segunda chance para cães abandonados desde 2018.</p>
-                            <div className="social-links">
-                                <a href="#"><i className="fab fa-facebook"></i></a>
-                                <a href="#"><i className="fab fa-instagram"></i></a>
-                                <a href="#"><i className="fab fa-twitter"></i></a>
-                            </div>
-                        </div>
-
-                        <div className="footer-section">
-                            <h4>Links Rápidos</h4>
-                            <ul>
-                                <li><a href="#home">Início</a></li>
-                                <li><a href="#about">Sobre</a></li>
-                                <li><a href="#dogs">Cães para Adoção</a></li>
-                                <li><a href="#process">Processo de Adoção</a></li>
-                            </ul>
-                        </div>
-
-                        <div className="footer-section">
-                            <h4>Contato</h4>
-                            <ul>
-                                <li><i className="fas fa-map-marker-alt"></i> Rua dos Animais, 123</li>
-                                <li><i className="fas fa-phone"></i> (11) 9999-9999</li>
-                                <li><i className="fas fa-envelope"></i> contato@anjosprotetores.org</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="footer-bottom">
-                        <p>&copy; 2023 Anjos Protetores. Todos os direitos reservados.</p>
-                    </div>
-                </div>
-            </footer>
+            <Footer />                
         </div>
     );
 };
