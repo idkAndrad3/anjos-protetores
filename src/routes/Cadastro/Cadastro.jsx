@@ -28,7 +28,7 @@ const Cadastro = () => {
             };
 
             
-            await axios.post('http://localhost:8080/api/auth/signUp', signUpPayload);
+            await axios.post('http://localhost:8080/api/pvt/auth/signUp', signUpPayload);
 
            
             alert('Cadastro realizado com sucesso! Agora podes fazer o login.');
