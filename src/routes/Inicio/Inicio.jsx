@@ -8,53 +8,34 @@ const Inicio = () => {
     const [dogs, setDogs] = useState([]);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    // Simulação de dados dos cachorros disponíveis para adoção
     useEffect(() => {
-        const fetchDogs = () => {
-            const mockDogs = [
-                {
-                    id: 1,
-                    name: "Rex",
-                    age: "2 anos",
-                    breed: "Vira-lata",
-                    size: "Médio",
-                    image: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
-                },
-                {
-                    id: 2,
-                    name: "Luna",
-                    age: "1 ano",
-                    breed: "Labrador",
-                    size: "Grande",
-                    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
-                },
-                {
-                    id: 3,
-                    name: "Bolt",
-                    age: "3 meses",
-                    breed: "Golden Retriever",
-                    size: "Pequeno",
-                    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
-                },
-                {
-                    id: 4,
-                    name: "Mel",
-                    age: "4 anos",
-                    breed: "Poodle",
-                    size: "Pequeno",
-                    image: "https://images.unsplash.com/photo-1517423568366-8b83523034fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
-                },
-                {
-                    id: 5,
-                    name: "Pastel",
-                    age: "5 anos",
-                    breed: "Poodle",
-                    size: "Pequeno",
-                    image: "https://images.unsplash.com/photo-1517423568366-8b83523034fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80"
+        const fetchDogs = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/pub/animals');
+                
+                if (!response.ok) {
+                    throw new Error('Falha ao buscar dados');
                 }
-            ];
-            setDogs(mockDogs);
+
+                const data = await response.json();
+
+                const formattedDogs = data.map(animal => ({
+                    id: animal.id,
+                    name: animal.name || animal.nome, 
+                    breed: animal.race.name || "Sem raça",
+                    // age: animal.age || animal.idade || "Idade não informada",
+                    // size: animal.size || animal.porte || "Médio",
+                    image: animal.imageUrl || animal.imagem || "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80"
+                }));
+
+                setDogs(formattedDogs);
+            } catch (error) {
+                console.error("Erro ao carregar animais:", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchDogs();
@@ -86,8 +67,9 @@ const Inicio = () => {
         window.location.href = '/login';
     };
 
-    const handleAdoptClick = () => {
-        window.location.href = '/animal/1';
+    const handleAdoptClick = (animalId) => {
+        const targetUrl = animalId ? `/animal/${animalId}` : '/animais'; 
+        window.location.href = targetUrl;
     };
 
     const getItemsPerPage = () => {
@@ -98,11 +80,10 @@ const Inicio = () => {
 
     const nextSlide = () => {
         const itemsPerPage = getItemsPerPage();
-        // O limite é o total menos o que já está visível
         const maxIndex = Math.max(0, dogs.length - itemsPerPage);
 
         setCurrentSlide((prev) => {
-            if (prev >= maxIndex) return 0; // Volta ao início
+            if (prev >= maxIndex) return 0; 
             return prev + 1;
         });
     };
@@ -117,7 +98,6 @@ const Inicio = () => {
         });
     };
 
-    // Timer do Carrossel
     useEffect(() => {
         const interval = setInterval(() => {
             nextSlide();
@@ -187,7 +167,7 @@ const Inicio = () => {
 
             {/* Dogs Section */}
             <section id="dogs" className="dogs-section">
-                <div className="default-container">
+                <div className="carousel-container">
 
                     <div className="dogs-carousel">
                         <h2>Cães Disponíveis para Adoção</h2>
@@ -206,14 +186,14 @@ const Inicio = () => {
                                         <div className="dog-image">
                                             <img src={dog.image} alt={dog.name} />
                                             <div className="dog-overlay">
-                                                <button className="adopt-me-btn" onClick={handleAdoptClick}>Quero Adotar</button>
+                                                <button className="adopt-me-btn" onClick={() => handleAdoptClick(dog.id)}>Quero Adotar</button>
                                             </div>
                                         </div>
                                         <div className="dog-info">
                                             <h3>{dog.name}</h3>
-                                            <p><strong>Idade:</strong> {dog.age}</p>
+                                            {/* <p><strong>Idade:</strong> {dog.age}</p>
+                                            <p><strong>Porte:</strong> {dog.size}</p> */}
                                             <p><strong>Raça:</strong> {dog.breed}</p>
-                                            <p><strong>Porte:</strong> {dog.size}</p>
                                         </div>
                                     </div>
                                 </div>

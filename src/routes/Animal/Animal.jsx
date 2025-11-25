@@ -6,71 +6,64 @@ import Navbar from '../Navbar/Navbar';
 import { TiArrowBackOutline } from 'react-icons/ti';
 import Footer from '../Footer/Footer';
 
-const MOCK_ANIMAIS = [
-  {
-    id: 1,
-    nome: 'Rex',
-    fotoUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80',
-    specie: { name: 'Cachorro' },
-    race: { name: 'Vira-lata' },
-    idade: '2 anos',
-    sexo: 'Macho',
-    porte: 'Médio',
-    description: 'O Rex é um cachorro muito brincalhão e cheio de energia. Adora correr no parque e pegar bolinhas. Se dá bem com crianças e outros cachorros.'
-  },
-  {
-    id: 2,
-    nome: 'Mia',
-    fotoUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80',
-    specie: { name: 'Gato' },
-    race: { name: 'Siamês' },
-    idade: '1 ano',
-    sexo: 'Fêmea',
-    porte: 'Pequeno',
-    description: 'Mia é uma gatinha calma e carinhosa. Gosta de dormir no sol e receber carinho na cabeça. Ideal para apartamento.'
-  },
-  {
-    id: 3,
-    nome: 'Thor',
-    fotoUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80',
-    specie: { name: 'Cachorro' },
-    race: { name: 'Beagle' },
-    idade: '3 anos',
-    sexo: 'Macho',
-    porte: 'Médio',
-    description: 'Thor é um explorador nato! Curioso e dócil, precisa de passeios diários para gastar energia.'
-  }
-];
-
 const Animal = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [animal, setAnimal] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   useEffect(() => {
-    const animalEncontrado = MOCK_ANIMAIS.find(a => a.id === parseInt(id));
-    setAnimal(animalEncontrado);
-    setLoading(false);
+    const buscarAnimal = async () => {
+      const token = localStorage.getItem('token');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      try {
+        setLoading(true);
+        // Usando GET e a URL correta com o ID da rota
+        const response = await fetch(`http://localhost:8080/api/pub/animals/request/${id}`, {
+          method: 'POST',
+          headers: headers
+        });
+
+        if (!response.ok) throw new Error('Erro na busca');
+
+        const data = await response.json();
+        setAnimal(data.animal);
+      } catch (error) {
+        console.error("Erro:", error);
+        setErro(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) buscarAnimal();
   }, [id]);
 
-  const handleVoltar = () => {
-    navigate(-1); 
-  };
+  const handleVoltar = () => navigate(-1);
+  const handleAdotar = () => alert(`Solicitação enviada para ${animal.name}!`);
 
   if (loading) return <div className="loading">Carregando...</div>;
 
-  if (!animal) {
+  if (!animal || erro) {
     return (
-      <>
-        <Navbar />
-        <div className="default-container padding-container error-container">
-          <h2>Animal não encontrado 😕</h2>
-          <button onClick={handleVoltar} className="btn-voltar">Voltar</button>
-        </div>
-      </>
+      <div className="default-container padding-container">Animal não encontrado</div>
     );
   }
+
+  console.log(animal)
+  const animalDisplay = {
+    name: animal.name,
+    description: animal.description,
+    specie: animal.specie?.name || 'Espécie não informada',
+    race: animal.race?.name || 'Raça não informada',
+    fotoUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80',
+    idade: 'Não informado',
+    sexo: 'Não informado',
+    porte: 'Não informado'
+  };
 
   return (
     <>
@@ -82,18 +75,19 @@ const Animal = () => {
             <button onClick={handleVoltar} className="back-icon" title="Voltar">
               <TiArrowBackOutline />
             </button>
-            <div className="detalhes-imagem-container">
 
+            <div className="detalhes-imagem-container">
               <img
-                src={animal.fotoUrl}
-                alt={animal.nome}
+                src={animalDisplay.fotoUrl}
+                alt={animalDisplay.name}
                 className="detalhes-foto"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
 
             <div className="detalhes-info-container">
 
-              <h1 className="detalhes-titulo">{animal.nome}</h1>
+              <h1 className="detalhes-titulo">{animalDisplay.name}</h1>
 
               <div className="tags-container">
                 <span className="tag especie">{animal.specie.name}</span>
@@ -103,30 +97,30 @@ const Animal = () => {
               <div className="info-grid">
                 <div className="info-item">
                   <strong>Idade:</strong>
-                  <span>{animal.idade}</span>
+                  <span>{animalDisplay.idade}</span>
                 </div>
                 <div className="info-item">
                   <strong>Sexo:</strong>
-                  <span>{animal.sexo}</span>
+                  <span>{animalDisplay.sexo}</span>
                 </div>
                 <div className="info-item">
                   <strong>Porte:</strong>
-                  <span>{animal.porte}</span>
+                  <span>{animalDisplay.porte}</span>
                 </div>
               </div>
 
               <div className="descricao-section">
-                <h3>Sobre o {animal.nome}</h3>
-                <p>{animal.description}</p>
+                <h3>Sobre o {animalDisplay.name}</h3>
+                <p>{animalDisplay.description}</p>
               </div>
 
-              <button className="btn-adotar-grande">
-                <FaPaw /> Quero Adotar o {animal.nome}
+              <button className="btn-adotar-grande" onClick={handleAdotar}>
+                <FaPaw /> Quero Adotar o {animalDisplay.name}
               </button>
             </div>
           </div>
         </div>
-      <Footer />
+        <Footer />
       </div>
     </>
   );

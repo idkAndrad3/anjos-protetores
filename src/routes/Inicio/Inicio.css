@@ -181,6 +181,11 @@ body {
     background-color: rgba(255, 248, 240, 0.5);
 }
 
+.carousel-container {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
 .dogs-section h2 {
     text-align: center;
     font-size: 2.5rem;
@@ -198,8 +203,7 @@ body {
 .dogs-carousel {
     position: relative;
     overflow: hidden;
-    margin: 0 auto 40px;
-    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .carousel-track {
@@ -209,13 +213,9 @@ body {
 }
 
 .carousel-slide {
-    /* MUDANÇA PRINCIPAL: */
     min-width: 25%;
-    /* Mostra 4 itens (100% / 4 = 25%) */
     flex: 0 0 25%;
-    /* Garante que não encolha */
     padding: 0 10px;
-    /* Espaçamento entre os cards */
     box-sizing: border-box;
 }
 
@@ -316,11 +316,11 @@ body {
 }
 
 .carousel-btn.prev {
-    left: 10px;
+    left: 20px;
 }
 
 .carousel-btn.next {
-    right: 10px;
+    right: 20px;
 }
 
 .carousel-indicators {
