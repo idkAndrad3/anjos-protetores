@@ -35,7 +35,7 @@ export default function Perfil() {
     const ok = window.confirm("Tem certeza que deseja excluir sua conta? Essa ação é irreversível.");
     if (!ok) return;
     try {
-      await api.delete(`/api/pvt/adopters/${user.id}`);
+      await api.delete(`/api/pvt/users/${user.id}`);
       localStorage.removeItem("token");
       alert("Conta excluída com sucesso.");
       nav("/login", { replace: true });
@@ -64,14 +64,18 @@ export default function Perfil() {
       <a href="/" className="back-icon">
         <TiArrowBackOutline />
       </a>
+
       <div className="logo">
         <img src={logo} alt="Logo" />
       </div>
+
       <h1>Meu Perfil</h1>
 
       <div className="perfil-card">
-        <p><strong>Nome:</strong> {user.name ?? user.nome}</p>
+        <p><strong>Nome:</strong> {user.name}</p>
         <p><strong>E-mail:</strong> {user.email}</p>
+        <p><strong>Telefone:</strong> {user.phone || "Não informado"}</p>
+        <p><strong>Endereço:</strong> {user.address || "Não informado"}</p>
       </div>
 
       <div className="perfil-actions">
