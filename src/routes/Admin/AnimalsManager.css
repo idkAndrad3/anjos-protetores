@@ -91,3 +91,23 @@
     border-radius: 4px;
     background-color: #eee;
 }
+.thumb-image {
+    width: 80px;          /* Tamanho fixo */
+    height: 80px;         /* Quadrado */
+    object-fit: cover;    /* Corta a imagem para preencher sem esticar */
+    border-radius: 8px;   /* Cantos arredondados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra leve */
+}
+
+/* 2. Estilo para o preview no FORMULÁRIO (Ao selecionar foto) */
+.preview-image {
+    display: block;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 250px;     /* Não deixa ficar gigante */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px dashed #ccc;
+    padding: 2px;
+}
