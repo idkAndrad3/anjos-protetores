@@ -624,6 +624,24 @@ body {
         font-size: 2rem;
     }
 
+    /* Fim Classes globais */
+
+    /* Ajuste responsivo específico para imagens do carrossel */
+    .dog-image {
+        width: 100%;
+        height: 300px; /* já existe, mas reafirmamos para consistência */
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dog-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;    /* garante corte elegante */
+        object-position: center; /* centraliza o conteúdo principal */
+        display: block;
+    }
+
     .process-container,
     .container-testimonials {
         width: 95%;
@@ -822,10 +840,6 @@ body {
         padding: 10px 20px;
         font-size: 0.9rem;
     }
-}
-/* Espaço para navbar fixa */
-.inicio-container {
-  padding-top: 80px; /* ajuste se seu header for maior/menor */
 }
 
 /* Ajustes responsivos para o padding do topo */
